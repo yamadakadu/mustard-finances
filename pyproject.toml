@@ -1,0 +1,15 @@
+[project]
+name = "mustard-finances"
+version = "0.1.0"
+description = "Personal finance manager API"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlmodel",
+    "pydantic-settings",
+    "pymysql",
+]
+
+[tool.fastapi]
+entrypoint = "backend.main:app"

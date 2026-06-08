@@ -10,9 +10,17 @@ engine = create_engine(settings.database_url, pool_pre_ping=True)
 
 
 def get_session():
-    """FastAPI dependency: yields a DB session per request and closes it after."""
+    """FastAPI dependency: yields a DB session per request and closes it after.
+
+    On any error we roll back before re-raising, so a failed transaction never
+    leaks into the next use of the connection.
+    """
     with Session(engine) as session:
-        yield session
+        try:
+            yield session
+        except Exception:
+            session.rollback()
+            raise
 
 
 # Reusable annotated dependency: `session: SessionDep` in any path operation.

@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   api,
+  type CategoriaInput,
   type ContaInput,
   type MovimentacaoInput,
   type TransferenciaInput,
@@ -59,6 +60,31 @@ export function useDeleteConta() {
 
 export function useCategorias() {
   return useQuery({ queryKey: keys.categorias, queryFn: () => api.categorias() });
+}
+
+export function useCreateCategoria() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: CategoriaInput) => api.createCategoria(data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.categorias }),
+  });
+}
+
+export function useUpdateCategoria() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<CategoriaInput> }) =>
+      api.updateCategoria(id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.categorias }),
+  });
+}
+
+export function useDeleteCategoria() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => api.deleteCategoria(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.categorias }),
+  });
 }
 
 export function useMovimentacoes() {

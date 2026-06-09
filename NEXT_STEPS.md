@@ -26,9 +26,9 @@ functional, usable personal finance app. Ordered by priority.
 - [x] Adopt **TanStack Query** (caching, mutations, auto-refetch after writes)
 - [x] Add shadcn `form` + `react-hook-form` + `zod` + `sonner` (toasts)
 - [x] **Movimentações** screen — list + client-side filters, add/edit form, transfer flow, soft-delete
-- [x] **Contas** screen — cards w/ per-account balance, add/edit, soft-delete (blocked if it has movements)
-- [ ] **Categorias** screen — manage parent/child hierarchy  ← next
-- [ ] **Faturas** screen — credit-card invoices + their movements + derived total
+- [x] **Contas** screen — cards w/ per-account balance, add/edit, soft-delete (blocked if it has movements); inline bank create + bank→accounts view
+- [x] **Categorias** screen — parent/child tree, add/edit, cycle-prevented; delete reparents children to root
+- [ ] **Faturas** screen — credit-card invoices + their movements + derived total  ← next (build high, review ultra)
 - [ ] Remove "em breve" badges as each screen ships (Movimentações done)
 
 > Note: the frontend uses **Base UI** (`@base-ui/react`), not Radix — shadcn components

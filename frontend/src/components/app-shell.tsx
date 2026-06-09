@@ -25,7 +25,7 @@ const NAV: NavItem[] = [
   { label: "Visão geral", href: "/", icon: LayoutDashboard },
   { label: "Contas", href: "/contas", icon: Wallet },
   { label: "Movimentações", href: "/movimentacoes", icon: ArrowLeftRight },
-  { label: "Categorias", href: "/categorias", icon: Tags, soon: true },
+  { label: "Categorias", href: "/categorias", icon: Tags },
   { label: "Faturas", href: "/faturas", icon: ReceiptText, soon: true },
 ];
 

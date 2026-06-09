@@ -66,6 +66,11 @@ export interface Categoria {
   created_at: string | null;
 }
 
+export interface CategoriaInput {
+  nome_categoria: string;
+  id_pai?: number | null;
+}
+
 export interface MovimentacaoInput {
   id_conta: number;
   id_categoria?: number | null;
@@ -163,6 +168,11 @@ export const api = {
     apiGet<Movimentacao[]>(`/movimentacoes${limit ? `?limit=${limit}` : ""}`),
   contas: () => apiGet<Conta[]>("/contas"),
   categorias: () => apiGet<Categoria[]>("/categorias"),
+  createCategoria: (data: CategoriaInput) =>
+    apiSend<Categoria>("POST", "/categorias", data),
+  updateCategoria: (id: number, data: Partial<CategoriaInput>) =>
+    apiSend<Categoria>("PATCH", `/categorias/${id}`, data),
+  deleteCategoria: (id: number) => apiSend<void>("DELETE", `/categorias/${id}`),
   bancos: () => apiGet<Banco[]>("/bancos"),
   createBanco: (nome_banco: string) =>
     apiSend<Banco>("POST", "/bancos", { nome_banco }),

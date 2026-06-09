@@ -24,6 +24,14 @@ export function useBancos() {
   return useQuery({ queryKey: keys.bancos, queryFn: () => api.bancos() });
 }
 
+export function useCreateBanco() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (nome: string) => api.createBanco(nome),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.bancos }),
+  });
+}
+
 export function useCreateConta() {
   const qc = useQueryClient();
   return useMutation({

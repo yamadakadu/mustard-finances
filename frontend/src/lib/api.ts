@@ -164,6 +164,8 @@ export const api = {
   contas: () => apiGet<Conta[]>("/contas"),
   categorias: () => apiGet<Categoria[]>("/categorias"),
   bancos: () => apiGet<Banco[]>("/bancos"),
+  createBanco: (nome_banco: string) =>
+    apiSend<Banco>("POST", "/bancos", { nome_banco }),
 
   createConta: (data: ContaInput) => apiSend<Conta>("POST", "/contas", data),
   updateConta: (id: number, data: Partial<ContaInput>) =>

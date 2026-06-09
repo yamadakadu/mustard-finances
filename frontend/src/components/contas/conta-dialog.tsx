@@ -34,6 +34,7 @@ import {
 import { ApiError, type Banco, type Conta, type ContaInput } from "@/lib/api";
 import { TIPO_CONTA_OPTIONS } from "@/lib/contas";
 import { useCreateConta, useUpdateConta } from "@/lib/queries";
+import { BankQuickAdd } from "@/components/contas/bank-quick-add";
 
 const NONE = "__none__";
 
@@ -61,6 +62,7 @@ export function ContaDialog({ open, onOpenChange, bancos, conta }: Props) {
   const create = useCreateConta();
   const update = useUpdateConta();
   const saving = create.isPending || update.isPending;
+  const [bankAddOpen, setBankAddOpen] = React.useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -187,7 +189,16 @@ export function ContaDialog({ open, onOpenChange, bancos, conta }: Props) {
               name="id_banco"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Banco</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Banco</FormLabel>
+                    <button
+                      type="button"
+                      onClick={() => setBankAddOpen(true)}
+                      className="text-xs font-medium text-primary hover:underline"
+                    >
+                      + Novo banco
+                    </button>
+                  </div>
                   <Select
                     value={field.value}
                     onValueChange={field.onChange}
@@ -221,6 +232,12 @@ export function ContaDialog({ open, onOpenChange, bancos, conta }: Props) {
             </DialogFooter>
           </form>
         </Form>
+
+        <BankQuickAdd
+          open={bankAddOpen}
+          onOpenChange={setBankAddOpen}
+          onCreated={(b) => form.setValue("id_banco", String(b.id_banco))}
+        />
       </DialogContent>
     </Dialog>
   );

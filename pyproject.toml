@@ -9,6 +9,7 @@ dependencies = [
     "sqlmodel",
     "pydantic-settings",
     "pymysql",
+    "cryptography"
 ]
 
 [tool.fastapi]

@@ -17,19 +17,22 @@ functional, usable personal finance app. Ordered by priority.
 ---
 
 ## 0. Unblock — get the database running (do first)
-- [ ] Add `docker-compose.yml` (MySQL 8.4 + named volume + auto-load `db_create.sql`)
-- [ ] `docker compose up -d`; confirm `Test-NetConnection localhost -Port 3306` succeeds
-- [ ] Create `.env` (backend) + confirm `frontend/.env.local` points at `http://localhost:8000`
-- [ ] Seed real banks + categories once
+- [x] Add `docker-compose.yml` (MySQL via mysql:oraclelinux9 + named volume + auto-load `db_create.sql`)
+- [x] `docker compose up -d`; MySQL reachable on 3306 (backend `/relatorios/resumo` returns 200)
+- [x] `.env` (backend) + `frontend/.env.local` point at `http://localhost:8000`
+- [ ] Seed real banks + categories once (DB currently empty)
 
 ## 1. Core functionality — the write UI (highest value)
-- [ ] Adopt **TanStack Query** (caching, mutations, auto-refetch after writes)
-- [ ] Add shadcn `form` + `react-hook-form` + `zod` + `sonner` (toasts)
-- [ ] **Movimentações** screen — list + filters, add-movement form, transfer flow, edit/soft-delete  ← start here
-- [ ] **Contas** screen — list with per-account balance, add/edit/soft-delete
+- [x] Adopt **TanStack Query** (caching, mutations, auto-refetch after writes)
+- [x] Add shadcn `form` + `react-hook-form` + `zod` + `sonner` (toasts)
+- [x] **Movimentações** screen — list + client-side filters, add/edit form, transfer flow, soft-delete
+- [ ] **Contas** screen — list with per-account balance, add/edit/soft-delete  ← next
 - [ ] **Categorias** screen — manage parent/child hierarchy
 - [ ] **Faturas** screen — credit-card invoices + their movements + derived total
-- [ ] Remove "em breve" badges as each screen ships
+- [ ] Remove "em breve" badges as each screen ships (Movimentações done)
+
+> Note: the frontend uses **Base UI** (`@base-ui/react`), not Radix — shadcn components
+> use the `render` prop (not `asChild`) and Select needs an `items` map to show labels.
 
 ## 2. Round out the backend for those screens
 - [ ] Per-account balance (computed field or endpoint: `saldo_inicial + entradas − saídas`)

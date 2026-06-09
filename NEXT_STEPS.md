@@ -26,8 +26,8 @@ functional, usable personal finance app. Ordered by priority.
 - [x] Adopt **TanStack Query** (caching, mutations, auto-refetch after writes)
 - [x] Add shadcn `form` + `react-hook-form` + `zod` + `sonner` (toasts)
 - [x] **Movimentações** screen — list + client-side filters, add/edit form, transfer flow, soft-delete
-- [ ] **Contas** screen — list with per-account balance, add/edit/soft-delete  ← next
-- [ ] **Categorias** screen — manage parent/child hierarchy
+- [x] **Contas** screen — cards w/ per-account balance, add/edit, soft-delete (blocked if it has movements)
+- [ ] **Categorias** screen — manage parent/child hierarchy  ← next
 - [ ] **Faturas** screen — credit-card invoices + their movements + derived total
 - [ ] Remove "em breve" badges as each screen ships (Movimentações done)
 
@@ -35,7 +35,7 @@ functional, usable personal finance app. Ordered by priority.
 > use the `render` prop (not `asChild`) and Select needs an `items` map to show labels.
 
 ## 2. Round out the backend for those screens
-- [ ] Per-account balance (computed field or endpoint: `saldo_inicial + entradas − saídas`)
+- [x] Per-account balance (`saldo_atual` on GET /contas + /contas/{id})
 - [ ] Filtering + pagination on `GET /movimentacoes` (date range, account, category)
 - [ ] Surface 409 / 422 responses as friendly toasts in the UI
 

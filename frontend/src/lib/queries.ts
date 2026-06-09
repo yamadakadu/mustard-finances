@@ -2,16 +2,51 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { api, type MovimentacaoInput, type TransferenciaInput } from "@/lib/api";
+import {
+  api,
+  type ContaInput,
+  type MovimentacaoInput,
+  type TransferenciaInput,
+} from "@/lib/api";
 
 export const keys = {
   movimentacoes: ["movimentacoes"] as const,
   contas: ["contas"] as const,
   categorias: ["categorias"] as const,
+  bancos: ["bancos"] as const,
 };
 
 export function useContas() {
   return useQuery({ queryKey: keys.contas, queryFn: () => api.contas() });
+}
+
+export function useBancos() {
+  return useQuery({ queryKey: keys.bancos, queryFn: () => api.bancos() });
+}
+
+export function useCreateConta() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (data: ContaInput) => api.createConta(data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.contas }),
+  });
+}
+
+export function useUpdateConta() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<ContaInput> }) =>
+      api.updateConta(id, data),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.contas }),
+  });
+}
+
+export function useDeleteConta() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => api.deleteConta(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.contas }),
+  });
 }
 
 export function useCategorias() {

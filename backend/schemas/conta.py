@@ -29,3 +29,8 @@ class ContaUpdate(SQLModel):
 class ContaPublic(ContaBase):
     id_conta: int
     created_at: datetime | None = None
+
+
+class ContaComSaldo(ContaPublic):
+    # saldo_inicial + entradas - saidas (non-deleted movements)
+    saldo_atual: Decimal

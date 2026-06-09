@@ -14,6 +14,20 @@ export interface Conta {
   saldo_inicial: string;
   id_banco: number | null;
   created_at: string | null;
+  saldo_atual?: string; // present on list/get responses
+}
+
+export interface Banco {
+  id_banco: number;
+  nome_banco: string | null;
+}
+
+export interface ContaInput {
+  nome_conta?: string | null;
+  tipo: TipoConta;
+  moeda?: string;
+  saldo_inicial?: string;
+  id_banco?: number | null;
 }
 
 export interface Movimentacao {
@@ -149,6 +163,12 @@ export const api = {
     apiGet<Movimentacao[]>(`/movimentacoes${limit ? `?limit=${limit}` : ""}`),
   contas: () => apiGet<Conta[]>("/contas"),
   categorias: () => apiGet<Categoria[]>("/categorias"),
+  bancos: () => apiGet<Banco[]>("/bancos"),
+
+  createConta: (data: ContaInput) => apiSend<Conta>("POST", "/contas", data),
+  updateConta: (id: number, data: Partial<ContaInput>) =>
+    apiSend<Conta>("PATCH", `/contas/${id}`, data),
+  deleteConta: (id: number) => apiSend<void>("DELETE", `/contas/${id}`),
 
   createMovimentacao: (data: MovimentacaoInput) =>
     apiSend<Movimentacao>("POST", "/movimentacoes", data),

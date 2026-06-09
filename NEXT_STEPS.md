@@ -1,0 +1,62 @@
+# Mustard Finances — Next Steps Checklist
+
+Roadmap to take the app from "read-only dashboard + CRUD API" to a fully
+functional, usable personal finance app. Ordered by priority.
+
+## Current state (done)
+- [x] Backend: FastAPI, bigger-applications layout (`backend/` package)
+- [x] Models: `banco, conta, categoria, fatura, movimentacao` (+ transfer pair)
+- [x] Full CRUD routers + soft-delete + `POST /movimentacoes/transferencia`
+- [x] Report endpoints: `/relatorios/resumo`, `/relatorios/gastos-por-categoria`, `?limit` on movimentações
+- [x] Integrity errors return 409 (not 500); session rollback on error
+- [x] `scripts/smoke_test.py` HTTP life-check (16 checks)
+- [x] Frontend: Next.js 16 + TS + Tailwind v4 + shadcn/ui + Recharts
+- [x] Dashboard (read-only): KPI cards, spending donut, recent movements
+- [x] Mustard warm theme (light/dark), pt-BR formatting, app shell + nav
+
+---
+
+## 0. Unblock — get the database running (do first)
+- [ ] Add `docker-compose.yml` (MySQL 8.4 + named volume + auto-load `db_create.sql`)
+- [ ] `docker compose up -d`; confirm `Test-NetConnection localhost -Port 3306` succeeds
+- [ ] Create `.env` (backend) + confirm `frontend/.env.local` points at `http://localhost:8000`
+- [ ] Seed real banks + categories once
+
+## 1. Core functionality — the write UI (highest value)
+- [ ] Adopt **TanStack Query** (caching, mutations, auto-refetch after writes)
+- [ ] Add shadcn `form` + `react-hook-form` + `zod` + `sonner` (toasts)
+- [ ] **Movimentações** screen — list + filters, add-movement form, transfer flow, edit/soft-delete  ← start here
+- [ ] **Contas** screen — list with per-account balance, add/edit/soft-delete
+- [ ] **Categorias** screen — manage parent/child hierarchy
+- [ ] **Faturas** screen — credit-card invoices + their movements + derived total
+- [ ] Remove "em breve" badges as each screen ships
+
+## 2. Round out the backend for those screens
+- [ ] Per-account balance (computed field or endpoint: `saldo_inicial + entradas − saídas`)
+- [ ] Filtering + pagination on `GET /movimentacoes` (date range, account, category)
+- [ ] Surface 409 / 422 responses as friendly toasts in the UI
+
+## 3. Make it safe to rely on
+- [ ] Auth — add `usuario` table + FastAPI OAuth2/JWT (or sessions); protect routes; token in API client
+- [ ] Deployment — extend compose to backend + frontend (or Vercel + Railway/PlanetScale)
+- [ ] Automated backups (`mysqldump` on a schedule)
+
+## Cross-cutting (do alongside)
+- [ ] Mobile nav — sidebar `Sheet` drawer + hamburger (currently hidden on small screens)
+- [ ] Tests — promote `smoke_test.py` to `pytest`; a few frontend component tests
+- [ ] Remove temp `.claude/launch.json` reliance / document how to run via Preview
+
+---
+
+## How to run (current)
+```powershell
+# 1. start MySQL (docker compose up -d, once #0 is done)
+# 2. backend
+cd mustard-finances ; fastapi dev backend/main.py        # :8000
+# 3. frontend (new terminal)
+cd mustard-finances/frontend ; npm run dev               # :3000
+```
+
+## Recommended next action
+**#0 (docker-compose)** → then **#1 Movimentações screen** (add + transfer + list),
+since logging transactions is the daily-use core.

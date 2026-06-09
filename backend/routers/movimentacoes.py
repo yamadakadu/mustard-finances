@@ -58,10 +58,20 @@ def criar_transferencia(data: TransferenciaCreate, session: SessionDep):
 
 
 @router.get("", response_model=list[MovimentacaoPublic])
-def list_movimentacoes(session: SessionDep):
-    return session.exec(
-        select(Movimentacao).where(Movimentacao.deleted_at == None)  # noqa: E711
-    ).all()
+def list_movimentacoes(session: SessionDep, limit: int | None = None):
+    """List movements, most recent first. Pass ?limit=N for the latest N
+    (used by the dashboard's 'recent movements' list)."""
+    stmt = (
+        select(Movimentacao)
+        .where(Movimentacao.deleted_at == None)  # noqa: E711
+        .order_by(
+            Movimentacao.data_movimentacao.desc(),
+            Movimentacao.id_movimentacao.desc(),
+        )
+    )
+    if limit is not None:
+        stmt = stmt.limit(limit)
+    return session.exec(stmt).all()
 
 
 @router.get("/{id_movimentacao}", response_model=MovimentacaoPublic)

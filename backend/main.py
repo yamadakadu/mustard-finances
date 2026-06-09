@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 from .config import settings
 from . import models  # noqa: F401  (import registers all SQLModel tables)
-from .routers import bancos, contas, categorias, faturas, movimentacoes
+from .routers import bancos, contas, categorias, faturas, movimentacoes, relatorios
 
 
 @asynccontextmanager
@@ -42,7 +42,7 @@ async def integrity_error_handler(request: Request, exc: IntegrityError):
         },
     )
 
-for module in (bancos, contas, categorias, faturas, movimentacoes):
+for module in (bancos, contas, categorias, faturas, movimentacoes, relatorios):
     app.include_router(module.router)
 
 

@@ -33,6 +33,17 @@ export function useCreateBanco() {
   });
 }
 
+export function useDeleteBanco() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => api.deleteBanco(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: keys.bancos });
+      qc.invalidateQueries({ queryKey: keys.contas }); // accounts lose their bank
+    },
+  });
+}
+
 export function useCreateConta() {
   const qc = useQueryClient();
   return useMutation({

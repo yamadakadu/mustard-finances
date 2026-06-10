@@ -9,6 +9,7 @@ import { brl, nomeMes } from "@/lib/format";
 import {
   useCategorias,
   useContas,
+  useCreateMovimentacao,
   useDeleteMovimentacao,
   useMovimentacoes,
 } from "@/lib/queries";
@@ -43,6 +44,7 @@ export default function MovimentacoesPage() {
   const categoriasQ = useCategorias();
   const movQ = useMovimentacoes();
   const del = useDeleteMovimentacao();
+  const create = useCreateMovimentacao();
 
   const contas = React.useMemo(() => contasQ.data ?? [], [contasQ.data]);
   const categorias = React.useMemo(() => categoriasQ.data ?? [], [categoriasQ.data]);
@@ -109,6 +111,25 @@ export default function MovimentacoesPage() {
       toast.error(e instanceof ApiError ? e.message : "Erro ao excluir");
     } finally {
       setToDelete(null);
+    }
+  }
+
+  async function handleDuplicate(m: Movimentacao) {
+    if (m.id_conta == null) return;
+    try {
+      await create.mutateAsync({
+        id_conta: m.id_conta,
+        id_categoria: m.id_categoria,
+        id_fatura: m.id_fatura,
+        tipo: m.tipo,
+        valor: m.valor,
+        descricao: m.descricao ? `${m.descricao} - Duplicado` : "Movimentação - Duplicado",
+        recorrencia: m.recorrencia,
+        data_movimentacao: m.data_movimentacao,
+      });
+      toast.success("Movimentação duplicada");
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : "Erro ao duplicar");
     }
   }
 
@@ -230,6 +251,7 @@ export default function MovimentacoesPage() {
               contaNome={contaNome}
               categoriaNome={categoriaNome}
               onEdit={openEdit}
+              onDuplicate={handleDuplicate}
               onDelete={setToDelete}
             />
           )}

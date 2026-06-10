@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { ApiError, type Conta } from "@/lib/api";
+import { ApiError, type Banco, type Conta } from "@/lib/api";
 import { brl } from "@/lib/format";
 import { TIPO_CONTA_LABEL } from "@/lib/contas";
-import { useBancos, useContas, useDeleteConta } from "@/lib/queries";
+import { useBancos, useContas, useDeleteBanco, useDeleteConta } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -47,6 +47,7 @@ export default function ContasPage() {
   const contasQ = useContas();
   const bancosQ = useBancos();
   const del = useDeleteConta();
+  const delBanco = useDeleteBanco();
 
   const contas = React.useMemo(() => contasQ.data ?? [], [contasQ.data]);
   const bancos = React.useMemo(() => bancosQ.data ?? [], [bancosQ.data]);
@@ -56,6 +57,7 @@ export default function ContasPage() {
   const [editing, setEditing] = React.useState<Conta | null>(null);
   const [toDelete, setToDelete] = React.useState<Conta | null>(null);
   const [bankAddOpen, setBankAddOpen] = React.useState(false);
+  const [bankToDelete, setBankToDelete] = React.useState<Banco | null>(null);
 
   const matches = React.useCallback(
     (c: Conta) =>
@@ -93,6 +95,19 @@ export default function ContasPage() {
       toast.error(e instanceof ApiError ? e.message : "Erro ao excluir");
     } finally {
       setToDelete(null);
+    }
+  }
+
+  async function confirmDeleteBanco() {
+    if (!bankToDelete) return;
+    try {
+      await delBanco.mutateAsync(bankToDelete.id_banco);
+      toast.success("Banco excluído");
+      if (sel === String(bankToDelete.id_banco)) setSel(ALL);
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : "Erro ao excluir banco");
+    } finally {
+      setBankToDelete(null);
     }
   }
 
@@ -143,6 +158,7 @@ export default function ContasPage() {
               count={countFor(String(b.id_banco))}
               active={sel === String(b.id_banco)}
               onClick={() => setSel(String(b.id_banco))}
+              onDelete={() => setBankToDelete(b)}
             />
           ))}
           <BankItem label="Sem banco" count={countFor(NO_BANK)} active={sel === NO_BANK} onClick={() => setSel(NO_BANK)} />
@@ -275,6 +291,29 @@ export default function ContasPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog open={!!bankToDelete} onOpenChange={(o) => !o && setBankToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir banco?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {bankToDelete?.nome_banco
+                ? `"${bankToDelete.nome_banco}" será removido.`
+                : "Este banco será removido."}{" "}
+              As contas associadas passam a ficar sem banco.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteBanco}
+              className="bg-destructive text-white hover:bg-destructive/90"
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -284,25 +323,54 @@ function BankItem({
   count,
   active,
   onClick,
+  onDelete,
 }: {
   label: string;
   count: number;
   active: boolean;
   onClick: () => void;
+  onDelete?: () => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <div
       className={cn(
-        "flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors",
-        active
-          ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-          : "text-foreground hover:bg-sidebar-accent/60",
+        "group flex items-center rounded-lg transition-colors",
+        active ? "bg-sidebar-accent" : "hover:bg-sidebar-accent/60",
       )}
     >
-      <span className="truncate">{label}</span>
-      <span className="text-xs text-muted-foreground tabular-nums">{count}</span>
-    </button>
+      <button
+        type="button"
+        onClick={onClick}
+        className={cn(
+          "flex flex-1 items-center justify-between gap-2 px-3 py-2 text-left text-sm",
+          active ? "font-medium text-sidebar-accent-foreground" : "text-foreground",
+        )}
+      >
+        <span className="truncate">{label}</span>
+        <span className="text-xs text-muted-foreground tabular-nums">{count}</span>
+      </button>
+      {onDelete && (
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="mr-1 size-7 opacity-0 group-hover:opacity-100"
+                aria-label="Ações do banco"
+              />
+            }
+          >
+            <MoreHorizontal className="size-3.5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem variant="destructive" onClick={onDelete}>
+              <Trash2 className="size-4" />
+              Excluir banco
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+    </div>
   );
 }

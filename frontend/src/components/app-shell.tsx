@@ -9,6 +9,7 @@ import {
   ArrowLeftRight,
   Tags,
   ReceiptText,
+  Target,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -27,6 +28,7 @@ const NAV: NavItem[] = [
   { label: "Movimentações", href: "/movimentacoes", icon: ArrowLeftRight },
   { label: "Categorias", href: "/categorias", icon: Tags },
   { label: "Faturas", href: "/faturas", icon: ReceiptText, soon: true },
+  { label: "Planejamento", href: "/planejamento", icon: Target, soon: true },
 ];
 
 function Brand() {

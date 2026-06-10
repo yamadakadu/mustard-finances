@@ -176,6 +176,7 @@ export const api = {
   bancos: () => apiGet<Banco[]>("/bancos"),
   createBanco: (nome_banco: string) =>
     apiSend<Banco>("POST", "/bancos", { nome_banco }),
+  deleteBanco: (id: number) => apiSend<void>("DELETE", `/bancos/${id}`),
 
   createConta: (data: ContaInput) => apiSend<Conta>("POST", "/contas", data),
   updateConta: (id: number, data: Partial<ContaInput>) =>

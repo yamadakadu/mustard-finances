@@ -34,6 +34,18 @@ functional, usable personal finance app. Ordered by priority.
 > Note: the frontend uses **Base UI** (`@base-ui/react`), not Radix — shadcn components
 > use the `render` prop (not `asChild`) and Select needs an `items` map to show labels.
 
+## 1b. Requested adjustments (batch 2026-06-10)
+- [x] Movimentações: **duplicate** a movement (copy; descrição "… - Duplicado")
+- [x] **Remove banco** (delete bank; its accounts fall back to "Sem banco" via FK SET NULL)
+- [x] Sidebar: **Planejamento** tab (stub / "em breve" — see below)
+- [ ] Movimentações: replace the flat account filter with a **banco → contas drill-down**
+      (banks as cards → click a bank → its accounts → then the movements list)  ← bigger redesign
+- [ ] Editing a **transferência** must update **both** halves of the pair (backend + UI)
+- [ ] Visão geral: **time-period filter** so the spending chart respects the chosen period
+
+## Planejamento (to be specified)
+- [ ] Sidebar tab added (em breve). User will instruct what to build here.
+
 ## 2. Round out the backend for those screens
 - [x] Per-account balance (`saldo_atual` on GET /contas + /contas/{id})
 - [ ] Filtering + pagination on `GET /movimentacoes` (date range, account, category)

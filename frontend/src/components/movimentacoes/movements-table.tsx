@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftRight, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeftRight, Copy, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,10 +27,18 @@ interface Props {
   contaNome: (id: number | null) => string;
   categoriaNome: (id: number | null) => string;
   onEdit: (m: Movimentacao) => void;
+  onDuplicate: (m: Movimentacao) => void;
   onDelete: (m: Movimentacao) => void;
 }
 
-export function MovementsTable({ items, contaNome, categoriaNome, onEdit, onDelete }: Props) {
+export function MovementsTable({
+  items,
+  contaNome,
+  categoriaNome,
+  onEdit,
+  onDuplicate,
+  onDelete,
+}: Props) {
   if (items.length === 0) {
     return (
       <div className="grid h-40 place-items-center text-sm text-muted-foreground">
@@ -104,6 +112,10 @@ export function MovementsTable({ items, contaNome, categoriaNome, onEdit, onDele
                       <DropdownMenuItem onClick={() => onEdit(m)}>
                         <Pencil className="size-4" />
                         Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onDuplicate(m)}>
+                        <Copy className="size-4" />
+                        Duplicar
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         variant="destructive"

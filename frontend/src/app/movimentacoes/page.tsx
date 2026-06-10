@@ -136,7 +136,6 @@ export default function MovimentacoesPage() {
   const offline =
     movQ.error instanceof ApiError && movQ.error.status === 0;
   const loading = movQ.isLoading || contasQ.isLoading || categoriasQ.isLoading;
-  const semContas = !contasQ.isLoading && contas.length === 0;
 
   const total = filtered.reduce(
     (acc, m) => acc + (m.tipo === "entrada" ? 1 : -1) * parseFloat(m.valor),
@@ -153,11 +152,11 @@ export default function MovimentacoesPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setTransferOpen(true)} disabled={semContas}>
+          <Button variant="outline" onClick={() => setTransferOpen(true)}>
             <ArrowLeftRight />
             Transferência
           </Button>
-          <Button onClick={openNew} disabled={semContas}>
+          <Button onClick={openNew}>
             <Plus />
             Nova movimentação
           </Button>
@@ -174,15 +173,6 @@ export default function MovimentacoesPage() {
                 Verifique se o backend (FastAPI) e o MySQL estão rodando.
               </p>
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {semContas && !offline && (
-        <Card>
-          <CardContent className="p-4 text-sm text-muted-foreground">
-            Você ainda não tem contas. Crie uma pela API (<code>/docs</code>) — a
-            tela de Contas vem em breve.
           </CardContent>
         </Card>
       )}
